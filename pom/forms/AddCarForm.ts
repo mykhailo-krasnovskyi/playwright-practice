@@ -10,6 +10,7 @@ export default class AddCarForm extends BasePage {
 
     async addCar(brand: string, model: string, mileage: string): Promise<void> {
         await this.brandDropdown.selectOption(brand);
+        await this.page.waitForTimeout(300);
         await this.modelDropdown.selectOption(model);
         await this.mileageField.fill(mileage);
         await this.addButton.click();

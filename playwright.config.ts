@@ -1,5 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
-
+require('dotenv').config();
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
@@ -28,8 +28,8 @@ export default defineConfig({
     /* Base URL to use in actions like `await page.goto('')`. */
     baseURL: 'https://qauto.forstudy.space/',
     httpCredentials: {
-      username: 'guest',
-      password: 'welcome2qauto'
+      username: process.env.HTTP_USERNAME!,
+      password: process.env.HTTP_PASSWORD!
     },
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'retain-on-failure',

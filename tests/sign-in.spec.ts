@@ -19,8 +19,10 @@ test.describe('POM Sign In tests', () => {
     })
 
     test('Successful sign in', async () => {
-        await signInForm.loginWithCredentials('michael.krasnovskyi+testUser1@gmail.com', 'ZSgeVQhuU3qkvlG');
-        await expect(garagePage.pageTitle).toBeVisible();
+        const email = 'michael.krasnovskyi+testUser1@gmail.com';
+        const password = 'ZSgeVQhu4242U3qkvlG';
+        await signInForm.loginWithCredentials(email, password);
+        await expect(garagePage.pageTitle, `Garage page is not open. Logging in data: Email : ${email}, password: ${password}`).toBeVisible();
     })
 
     test('Sign In without email', async () => {

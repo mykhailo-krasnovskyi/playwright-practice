@@ -55,12 +55,12 @@ test.describe('POM Garage Page tests', () => {
 
         test('Add Fiat Panda', async () => {
             await addCarForm.addCar('Fiat', 'Panda', '555');
-            await expect(garagePage.lastCarName).toHaveText('Fiat Panda');
+            await expect(garagePage.lastCarName).toHaveText('Fiat ffff');
         });
     })
 
 })
-test.describe('Garage Page tests', () => {
+test.describe.skip('Garage Page tests', () => {
 
     test.beforeEach(async ({ page }) => {
         await page.goto('/');

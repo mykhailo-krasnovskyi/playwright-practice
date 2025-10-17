@@ -1,5 +1,6 @@
 import { Locator } from "@playwright/test";
 import BasePage from "../BasePage";
+import { step } from "../../utils/stepDecorator";
 
 export default class AddCarForm extends BasePage {
 
@@ -8,6 +9,7 @@ export default class AddCarForm extends BasePage {
     private readonly mileageField: Locator = this.page.locator('//input[@id="addCarMileage"]');
     private readonly addButton: Locator = this.page.locator('//div[contains(@class, "modal-footer")]//button[@class="btn btn-primary"]');
 
+    @step('Add new car')
     async addCar(brand: string, model: string, mileage: string): Promise<void> {
         await this.brandDropdown.selectOption(brand);
         await this.page.waitForTimeout(300);

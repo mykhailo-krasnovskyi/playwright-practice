@@ -4,8 +4,10 @@ import HomePage from "../pom/pages/HomePage";
 import GaragePage from "../pom/pages/GaragePage";
 import AddCarForm from "../pom/forms/AddCarForm";
 
-test.describe('POM Garage Page tests', () => {
+test.use({ storageState: '.auth/testUser1.json' });
 
+test.describe('POM Garage Page tests', () => {
+    
     let homePage: HomePage;
     let signInForm: SignInForm;
     let garagePage: GaragePage;
@@ -17,10 +19,12 @@ test.describe('POM Garage Page tests', () => {
         garagePage = new GaragePage(page);
         addCarForm = new AddCarForm(page);
 
-        await homePage.navigate();
-        await homePage.openSignInForm();
-        await signInForm.loginWithCredentials('michael.krasnovskyi+testUser1@gmail.com', 'ZSgeVQhuU3qkvlG');
-        await expect(garagePage.pageTitle).toBeVisible();
+        // await homePage.navigate();
+        // await homePage.openSignInForm();
+        // await signInForm.loginWithCredentials('michael.krasnovskyi+testUser1@gmail.com', 'ZSgeVQhuU3qkvlG');
+        // await expect(garagePage.pageTitle).toBeVisible();
+
+        await garagePage.navigate();
         await garagePage.openAddCarForm();
     })
 
@@ -55,20 +59,20 @@ test.describe('POM Garage Page tests', () => {
 
         test('Add Fiat Panda', async () => {
             await addCarForm.addCar('Fiat', 'Panda', '555');
-            await expect(garagePage.lastCarName).toHaveText('Fiat ffff');
+            await expect(garagePage.lastCarName).toHaveText('Fiat Panda');
         });
     })
 
 })
-test.describe.skip('Garage Page tests', () => {
+test.describe('Garage Page tests', () => {
 
     test.beforeEach(async ({ page }) => {
         await page.goto('/');
-        await page.getByRole('button', { name: 'Sign In' }).click();
-        await page.getByRole('textbox', { name: 'Email' }).fill('michael.krasnovskyi+testUser1@gmail.com');
-        await page.getByRole('textbox', { name: 'Password' }).fill('ZSgeVQhuU3qkvlG');
-        await page.getByRole('button', { name: 'Login' }).click();
-        await expect(page).toHaveURL('https://qauto.forstudy.space/panel/garage');
+        // await page.getByRole('button', { name: 'Sign In' }).click();
+        // await page.getByRole('textbox', { name: 'Email' }).fill('michael.krasnovskyi+testUser1@gmail.com');
+        // await page.getByRole('textbox', { name: 'Password' }).fill('ZSgeVQhuU3qkvlG');
+        // await page.getByRole('button', { name: 'Login' }).click();
+        // await expect(page).toHaveURL('https://qauto.forstudy.space/panel/garage');
         await page.getByRole('button', { name: 'Add car' }).click();
     })
 

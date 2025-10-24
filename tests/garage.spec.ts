@@ -3,38 +3,45 @@ import SignInForm from "../pom/forms/SignInForm";
 import HomePage from "../pom/pages/HomePage";
 import GaragePage from "../pom/pages/GaragePage";
 import AddCarForm from "../pom/forms/AddCarForm";
+import CarsController from "../api/controllers/CarsController";
+import * as fs from 'fs';
 
 test.use({ storageState: '.auth/testUser1.json' });
 
+function getSidFromStorageState(storageStatePath: string): string {
+    const storageState = JSON.parse(fs.readFileSync(storageStatePath, 'utf-8'));
+    const sidCookie = storageState.cookies.find((cookie: any) => cookie.name === 'sid');
+    if (!sidCookie) {
+        throw new Error('sid cookie not found in storageState');
+    }
+    return `sid=${sidCookie.value}`;
+}
+
 test.describe('POM Garage Page tests', () => {
-    
+
     let homePage: HomePage;
     let signInForm: SignInForm;
     let garagePage: GaragePage;
     let addCarForm: AddCarForm;
+    let carsController: CarsController;
 
-    test.beforeEach(async ({ page }) => {
+    test.beforeEach(async ({ page, request }) => {
         homePage = new HomePage(page);
         signInForm = new SignInForm(page);
         garagePage = new GaragePage(page);
         addCarForm = new AddCarForm(page);
-
-        // await homePage.navigate();
-        // await homePage.openSignInForm();
-        // await signInForm.loginWithCredentials('michael.krasnovskyi+testUser1@gmail.com', 'ZSgeVQhuU3qkvlG');
-        // await expect(garagePage.pageTitle).toBeVisible();
+        carsController = new CarsController(request);
 
         await garagePage.navigate();
         await garagePage.openAddCarForm();
     })
 
-
     test.describe('Successful car adding', () => {
 
-        test.afterEach(async ({ page }) => {
-            await page.locator('//span[contains(@class, "icon-edit")]').first().click();
-            await page.getByText('Remove car').click();
-            await page.locator('//button[contains(@class, "btn-danger")]').click();
+        test.afterEach(async ({ request }) => {
+            const carsController = new CarsController(request);
+            const sid = getSidFromStorageState('.auth/testUser1.json');
+            await carsController.removeLastAddedCar(sid);
         })
 
         test('Add Audi Q7', async () => {

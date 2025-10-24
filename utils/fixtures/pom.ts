@@ -6,6 +6,7 @@ type pom = {
     addCarForm: AddCarForm;
     garagePage: GaragePage;
     openAddCarFormWithRemoving: AddCarForm;
+    garagePageAsUser1: GaragePage;
 };
 
 export const test = base.extend<pom>({
@@ -27,6 +28,18 @@ export const test = base.extend<pom>({
         let garagePage = new GaragePage(page);
         await use(garagePage);
     },
+    garagePageAsUser1: async ({ browser }, use) => {
+        const context = await browser.newContext({
+            storageState: '.auth/testUser1.json'
+        });
+
+        let page = await context.newPage();
+        let garagePage = new GaragePage(page);
+        await garagePage.navigate();
+        await use(garagePage);
+        await context.close();
+    }
+
 
 });
 export { expect } from '@playwright/test';

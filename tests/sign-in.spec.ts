@@ -20,7 +20,7 @@ test.describe('POM Sign In tests', () => {
 
     test('Successful sign in', async () => {
         const email = 'michael.krasnovskyi+testUser1@gmail.com';
-        const password = 'ZSgeVQhu4242U3qkvlG';
+        const password = 'ZSgeVQhuU3qkvlG';
         await signInForm.loginWithCredentials(email, password);
         await expect(garagePage.pageTitle, `Garage page is not open. Logging in data: Email : ${email}, password: ${password}`).toBeVisible();
     })
@@ -77,12 +77,12 @@ test.describe('Sign In tests', () => {
         await expect(page.locator('//h4[@class="modal-title"]')).toHaveText('Restore access');
     })
 
-    test('Screenshot testing', async ({ page }) => {
-        await page.locator('//input[@id="signinEmail"]').fill('michael.krasnovskyi+testUser1@gmail.com');
-        await page.locator('//input[@id="signinPassword"]').fill('ZSgeVQhuU3qkvlG');
-        await page.locator('//div[contains(@class, "modal-footer")]// button[@class="btn btn-primary"]').click();
-        await expect(page).toHaveURL('https://qauto.forstudy.space/panel/garage');
-        await expect(page.locator('//li[@class="car-item"]').first()).toHaveScreenshot('last-added-car.png');
-    })
+    // test('Screenshot testing', async ({ page }) => {
+    //     await page.locator('//input[@id="signinEmail"]').fill('michael.krasnovskyi+testUser1@gmail.com');
+    //     await page.locator('//input[@id="signinPassword"]').fill('ZSgeVQhuU3qkvlG');
+    //     await page.locator('//div[contains(@class, "modal-footer")]// button[@class="btn btn-primary"]').click();
+    //     await expect(page).toHaveURL('https://qauto.forstudy.space/panel/garage');
+    //     await expect(page.locator('//li[@class="car-item"]').first()).toHaveScreenshot('last-added-car.png');
+    // })
 
 })

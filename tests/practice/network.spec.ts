@@ -2,9 +2,9 @@ import { expect, test } from "../../utils/fixtures/pom";
 import HomePage from '../../pom/pages/HomePage';
 import SignInForm from '../../pom/forms/SignInForm';
 import GaragePage from '../../pom/pages/GaragePage';
-import AuthController from "../../api/controllers/AuthController";
 import CarsController from "../../api/controllers/CarsController";
 import { testUser1 } from "../../test-data/users";
+import AccountController from "../../api/controllers/AccountController";
 
 test.describe('Intercept & Mock tests', () => {
     let homePage: HomePage;
@@ -89,14 +89,14 @@ test.describe('Intercept & Mock tests', () => {
 })
 
 test.describe('API requests', () => {
-    let authController: AuthController;
+    let accountController: AccountController;
     let carsController: CarsController;
 
     let sid: string;
 
     test.beforeAll(async ({ request }) => {
-        authController = new AuthController(request);
-        const response = await authController.signIn(testUser1.email, testUser1.password);
+        accountController = new AccountController(request);
+        const response = await accountController.signIn(testUser1.email, testUser1.password);
         sid = response;
     });
 

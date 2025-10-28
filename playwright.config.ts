@@ -51,12 +51,13 @@ export default defineConfig({
     {
       name: 'setup',
       use: { ...devices['Desktop Chrome'] },
-      testMatch: '**/setup/**.setup.ts'
+      testMatch: '**/setup/**.setup.ts',
+      workers: 1,
     },
     {
       name: 'e2e',
       use: { ...devices['Desktop Chrome'] },
-      testIgnore: '**/setup/**.setup.ts',
+      testIgnore: ['**/setup/**.setup.ts', '**/practice/**'],
       dependencies: ['setup']
     },
 

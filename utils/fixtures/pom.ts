@@ -16,6 +16,7 @@ export const test = base.extend<pom>({
 
         let addCarFormPage = new AddCarForm(page);
         await use(addCarFormPage);
+        await page.waitForTimeout(500);
         await page.locator('//span[contains(@class, "icon-edit")]').first().click();
         await page.getByText('Remove car').click();
         await page.locator('//button[contains(@class, "btn-danger")]').click();

@@ -1,4 +1,4 @@
-name: Playwright Tests
+name: Playwright Tests with GitHub Pages
 on:
   workflow_dispatch:
     inputs:

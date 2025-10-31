@@ -4,6 +4,11 @@ on:
     branches: [ main, master, lesson31 ]
   pull_request:
     branches: [ main, master, lesson31 ]
+
+env:
+  HTTP_USERNAME: ${{ secrets.HTTP_USERNAME }}
+  HTTP_PASSWORD: ${{ secrets.HTTP_PASSWORD }} 
+
 jobs:
   test:
     timeout-minutes: 60
@@ -16,7 +21,7 @@ jobs:
     - name: Install dependencies
       run: npm ci
     - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
+      run: npx playwright install chromium --with-deps
     - name: Run Playwright tests
       run: npx playwright test
     - uses: actions/upload-artifact@v4

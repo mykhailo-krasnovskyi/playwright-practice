@@ -1,5 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
-
+require('dotenv').config();
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
@@ -11,6 +11,14 @@ import { defineConfig, devices } from '@playwright/test';
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
+
+const testRailOptions = {
+  // Whether to add <properties> with all annotations; default is false
+  embedAnnotationsAsProperties: true,
+  // Where to put the report.
+  outputFile: './test-results/junit-report.xml'
+};
+
 export default defineConfig({
   testDir: './tests',
   /* Run tests in files in parallel */
@@ -22,14 +30,15 @@ export default defineConfig({
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'html',
+  reporter: [['html', { open: 'never' }],
+  ['junit', testRailOptions]],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
     baseURL: 'https://qauto.forstudy.space/',
     httpCredentials: {
-      username: 'guest',
-      password: 'welcome2qauto'
+      username: process.env.HTTP_USERNAME!,
+      password: process.env.HTTP_PASSWORD!
     },
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'retain-on-failure',
@@ -40,14 +49,17 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
-      name: 'chromium',
+      name: 'setup',
       use: { ...devices['Desktop Chrome'] },
+      testMatch: '**/setup/**.setup.ts',
+      workers: 1,
     },
-
-    // {
-    //   name: 'firefox',
-    //   use: { ...devices['Desktop Firefox'] },
-    // },
+    {
+      name: 'e2e',
+      use: { ...devices['Desktop Chrome'] },
+      testIgnore: ['**/setup/**.setup.ts', '**/practice/**'],
+      dependencies: ['setup']
+    },
 
     // {
     //   name: 'webkit',

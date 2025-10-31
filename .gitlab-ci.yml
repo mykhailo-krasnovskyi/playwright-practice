@@ -1,0 +1,72 @@
+stages:
+  - install
+  - test
+  - report
+
+# Define environment variables
+variables:
+  # CI environment flag (automatically used by Playwright config)
+  CI: "true"
+  # Add your custom variables here or set them in GitLab CI/CD Settings
+  # HTTP_USERNAME and HTTP_PASSWORD should be set as protected variables in GitLab
+  # MY_VARIABLE: "value"
+
+# Cache node modules to speed up builds
+cache:
+  key:
+    files:
+      - package-lock.json
+  paths:
+    - node_modules/
+    - ~/.cache/ms-playwright/
+
+# Install dependencies
+install_dependencies:
+  stage: install
+  image: node:18
+  script:
+    - npm ci
+    - npx playwright install --with-deps
+  artifacts:
+    paths:
+      - node_modules/
+    expire_in: 1 hour
+
+# Run Playwright tests
+test_playwright:
+  stage: test
+  image: mcr.microsoft.com/playwright:v1.56.1-jammy
+  needs:
+    - install_dependencies
+  # Environment variables for this job
+  # Sensitive variables should be set in GitLab: Settings > CI/CD > Variables
+  variables:
+    HTTP_USERNAME: ${HTTP_USERNAME}
+    HTTP_PASSWORD: ${HTTP_PASSWORD}
+    MY_VARIABLE: ${MY_VARIABLE}
+  script:
+    - npm ci
+    - npx playwright test
+  artifacts:
+    when: always
+    paths:
+      - playwright-report/
+      - test-results/
+    reports:
+      junit: test-results/junit-report.xml
+    expire_in: 30 days
+  allow_failure: false
+
+# Generate and publish report
+publish_report:
+  stage: report
+  image: node:18
+  needs:
+    - test_playwright
+  script:
+    - echo "Test report is available in artifacts"
+  artifacts:
+    paths:
+      - playwright-report/
+    expire_in: 30 days
+  when: always

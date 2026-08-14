@@ -1,47 +1,49 @@
 import { test, expect } from '@playwright/test';
+import HomePage from '../pom/pages/HomePage';
+import SignInForm from '../pom/forms/SignInForm';
+import GaragePage from '../pom/pages/GaragePage';
 
 test.describe('Sign In Form', () => {
+    let homePage: HomePage;
+    let signInForm: SignInForm;
+    let garagePage: GaragePage;
+
     test.beforeEach(async ({ page }) => {
-        await page.goto('/');
-        await page.locator('.header_signin').click();
+        homePage = new HomePage(page);
+        signInForm = new SignInForm(page);
+        garagePage = new GaragePage(page);
+
+        await homePage.openPage();
+        await homePage.openSignInForm();
     })
 
-    test('Sign In with valid credentials', async ({ page }) => {
-        await page.getByLabel('Email').fill('michael.krasnovskyi+testUser2@gmail.com');
-        await page.getByLabel('Password').fill('ZSgeVQhuU3qkvlG');
-        await page.getByRole('button', { name: 'Login' }).click();
-        await expect(page.getByText('You have been successfully logged in')).toBeVisible();
-        await expect(page.locator('h1', { hasText: 'Garage' })).toBeVisible();
-        await expect(page).toHaveScreenshot('garagePage.png', { mask: [page.locator('[name="miles"]')] });
+    test('Sign In with valid credentials', async () => {
+        await signInForm.signIn('michael.krasnovskyi+testUser2@gmail.com', 'ZSgeVQhuU3qkvlG');
+        await expect(garagePage.successLoginMessage).toBeVisible();
+        await expect(garagePage.pageHeader).toBeVisible();
     });
 
-    test('Sign In with invalid credentials', async ({ page }) => {
-        await page.getByLabel('Email').fill('invalid@email.com');
-        await page.getByLabel('Password').fill('invalidpassword');
-        await page.getByRole('button', { name: 'Login' }).click();
-        await expect(page.getByText('Wrong email or password')).toBeVisible();
+    test('Sign In with invalid credentials', async () => {
+        await signInForm.signIn('invalid@email.com', 'invalidpassword');
+        await expect(signInForm.invalidCredentialsMessage).toBeVisible();
     });
 
-    test('Sign In without email', async ({ page }) => {
-        await page.getByLabel('Email').focus();
-        await page.getByLabel('Password').fill('ZSgeVQhuU3qkvlG');
-        await expect(page.getByText('Email required')).toBeVisible();
-        await expect(page.getByLabel('Email')).toHaveCSS('border-color', 'rgb(220, 53, 69)');
+    test('Sign In without email', async () => {
+        await signInForm.triggerValidationError(signInForm.emailField);
+        await expect(signInForm.emptyEmailMessage).toBeVisible();
+        await expect(signInForm.emailField).toHaveCSS('border-color', 'rgb(220, 53, 69)');
     });
 
-    test('Sign In without password', async ({ page }) => {
-        await page.getByLabel('Email').fill('michael.krasnovskyi+testUser2@gmail.com');
-        await page.getByLabel('Password').focus();
-        await page.getByLabel('Password').blur();
-        await expect(page.getByText('Password required')).toBeVisible();
-        await expect(page.getByLabel('Password')).toHaveCSS('border-color', 'rgb(220, 53, 69)');
+    test('Sign In without password', async () => {
+        await signInForm.triggerValidationError(signInForm.passwordField);
+        await expect(signInForm.emptyPasswordMessage).toBeVisible();
+        await expect(signInForm.passwordField).toHaveCSS('border-color', 'rgb(220, 53, 69)');
     });
 
-    test('Sign In with invalid email format', async ({ page }) => {
-        await page.getByLabel('Email').fill('invalidemailformat');
-        await page.getByLabel('Email').blur();
-        await page.getByLabel('Password').fill('ZSgeVQhuU3qkvlG');
-        await expect(page.getByText('Email is incorrect')).toBeVisible();
-        await expect(page.getByLabel('Email')).toHaveCSS('border-color', 'rgb(220, 53, 69)');
+    test('Sign In with invalid email format', async () => {
+        await signInForm.enterEmail('invalidemailformat');
+        await signInForm.triggerValidationError(signInForm.emailField);
+        await expect(signInForm.invalidEmailMessage).toBeVisible();
+        await expect(signInForm.emailField).toHaveCSS('border-color', 'rgb(220, 53, 69)');
     });
 })

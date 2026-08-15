@@ -18,7 +18,7 @@ test.describe('Sign In Form', () => {
     })
 
     test('Sign In with valid credentials', async () => {
-        await signInForm.signIn('michael.krasnovskyi+testUser2@gmail.com', 'ZSgeVQhuU3qkvlG');
+        await signInForm.signIn(process.env.TEST_USER_EMAIL!, process.env.TEST_USER_PASSWORD!);
         await expect(garagePage.successLoginMessage).toBeVisible();
         await expect(garagePage.pageHeader).toBeVisible();
     });

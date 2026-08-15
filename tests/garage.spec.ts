@@ -23,7 +23,7 @@ test.describe('Garage Page', () => {
 
         await homePage.openPage();
         await homePage.openSignInForm();
-        await signInForm.signIn('michael.krasnovskyi+testUser2@gmail.com', 'ZSgeVQhuU3qkvlG');
+        await signInForm.signIn(process.env.TEST_USER_EMAIL!, process.env.TEST_USER_PASSWORD!);
         await expect(garagePage.pageHeader).toBeVisible();
         await garagePage.openAddCarForm();
     })

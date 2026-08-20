@@ -1,4 +1,5 @@
 import { Locator, Page } from "@playwright/test";
+import { step } from "../../utils/step-decorator";
 
 export default class HomePage {
     public readonly page: Page;

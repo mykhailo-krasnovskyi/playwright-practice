@@ -17,18 +17,18 @@ test.describe('Sign In Form', () => {
         await homePage.openSignInForm();
     })
 
-    test('Sign In with valid credentials', async () => {
+    test('TC-1 Sign In with valid credentials', async () => {
         await signInForm.signIn(process.env.TEST_USER_EMAIL!, process.env.TEST_USER_PASSWORD!);
         await expect(garagePage.successLoginMessage).toBeVisible();
         await expect(garagePage.pageHeader).toBeVisible();
     });
 
-    test('Sign In with invalid credentials', async () => {
+    test('TC-2 Sign In with invalid credentials', async () => {
         await signInForm.signIn('invalid@email.com', 'invalidpassword');
         await expect(signInForm.invalidCredentialsMessage).toBeVisible();
     });
 
-    test('Sign In without email', async () => {
+    test('TC-3 Sign In without email', async () => {
         await signInForm.triggerValidationError(signInForm.emailField);
         await expect(signInForm.emptyEmailMessage).toBeVisible();
         await expect(signInForm.emailField).toHaveCSS('border-color', 'rgb(220, 53, 69)');

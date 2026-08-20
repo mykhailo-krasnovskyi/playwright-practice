@@ -1,4 +1,5 @@
 import { Locator, Page } from "@playwright/test";
+import { step } from "../../utils/step-decorator";
 
 export default class SignInForm {
     public readonly emailField: Locator;
@@ -37,6 +38,7 @@ export default class SignInForm {
         await this.clickLoginButton();
     }
 
+    @step('Trigger Validation Error for Field: {0}')
     async triggerValidationError(field: Locator) {
         await field.focus();
         await field.blur();

@@ -49,9 +49,14 @@ export default defineConfig({
     },
     {
       name: 'e2e',
-      testIgnore: '*/setup/*.setup.ts',
+      testMatch: 'tests/*.spec.ts',
       dependencies: ['setup']
     },
+    {
+      name: 'api',
+      testMatch: '*/api/*.spec.ts',
+      dependencies: ['setup']
+    }
 
     // {
     //   name: 'firefox',

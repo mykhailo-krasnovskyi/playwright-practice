@@ -3,6 +3,11 @@ on:
   pull_request:
     branches: [main, master]
   workflow_dispatch:
+    inputs:
+      test_settings:
+        description: 'Test Settings to run'
+        required: false
+
 
 jobs:
   test:
@@ -25,7 +30,7 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install chromium --with-deps
       - name: Run Playwright tests
-        run: npx playwright test
+        run: npx playwright test ${{ inputs.test_settings }}
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:

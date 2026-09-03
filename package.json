@@ -9,6 +9,13 @@
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.62.1",
-    "@types/node": "^26.1.2"
+    "@qamadness/qam-playwright-reporter": "^0.3.0",
+    "@testomatio/reporter": "^2.14.0",
+    "@types/node": "^26.1.2",
+    "allure-playwright": "^3.10.2"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^10.5.0",
+    "dotenv": "^17.4.2"
   }
 }

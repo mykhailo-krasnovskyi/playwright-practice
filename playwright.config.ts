@@ -1,5 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
-
+import dotenv from 'dotenv'
+dotenv.config();
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
@@ -22,23 +23,40 @@ export default defineConfig({
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'html',
+  reporter: [
+    ['html'],
+  ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
-    // baseURL: 'http://localhost:3000',
+    baseURL: process.env.BASE_URL,
+    httpCredentials: {
+      username: process.env.HTTP_USERNAME!,
+      password: process.env.HTTP_PASSWORD!,
+    },
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    video: 'on',
-    screenshot: 'on',
-    trace: 'on'
+    video: 'retain-on-failure',
+    screenshot: 'only-on-failure',
+    trace: 'retain-on-failure'
   },
 
   /* Configure projects for major browsers */
   projects: [
     {
-      name: 'e2e'
+      name: 'setup',
+      testMatch: '*/setup/*.setup.ts'
     },
+    {
+      name: 'e2e',
+      testMatch: 'tests/*.spec.ts',
+      dependencies: ['setup']
+    },
+    {
+      name: 'api',
+      testMatch: '*/api/*.spec.ts',
+      dependencies: ['setup']
+    }
 
     // {
     //   name: 'firefox',

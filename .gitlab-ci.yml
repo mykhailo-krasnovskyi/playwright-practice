@@ -1,0 +1,28 @@
+# Variables
+variables:
+  BASE_URL: $BASE_URL # variable defined in GitLab Project CI/CD Settings
+  HTTP_USERNAME: $HTTP_USERNAME # variable defined in GitLab Project CI/CD Settings
+  HTTP_PASSWORD: $HTTP_PASSWORD # variable defined in GitLab Project CI/CD Settings
+  TEST_USER_EMAIL: $TEST_USER_EMAIL # variable defined in GitLab Project CI/CD Settings
+  TEST_USER_PASSWORD: $TEST_USER_PASSWORD # variable defined in GitLab Project CI/CD Settings
+
+# Define the stages for your pipeline
+stages:
+  - test
+
+# Define the job for running Playwright tests
+run_playwright_tests:
+  stage: test
+  image: mcr.microsoft.com/playwright:v1.62.0-noble
+  script:
+    - npm ci # Install project dependencies
+    - npx playwright test # Run your Playwright tests
+    - echo "https://$CI_PROJECT_NAMESPACE.gitlab.io/-/$CI_PROJECT_NAME/-/jobs/$CI_JOB_ID/artifacts/playwright-report/index.html" # print the URL to view the results
+  allow_failure: true
+
+  # Publish Playwright test results as artifacts and keep for 2 days
+artifacts:
+  when: always
+  paths:
+    - playwright-report
+  expire_in: 2 days
